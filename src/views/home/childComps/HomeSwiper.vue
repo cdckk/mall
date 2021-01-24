@@ -1,7 +1,7 @@
 <template>
     <swiper-item>
         <!-- <a href="banners[0].link"></a> -->
-        <img :src="banners[0].image">
+        <img :src="banners[0].image" @load="imageLoad">
     </swiper-item>
 </template>
 
@@ -19,8 +19,20 @@ export default {
             }
         }
     },
+    data() {
+        return {
+            isLoad: false
+        }
+    },
     components: {
         SwiperItem
+    },
+    methods: {
+        imageLoad() {
+            if(!this.isLoad)
+            this.$emit('swiperLoad');
+            this.isLoad = true;
+        }
     }
 }
 </script>

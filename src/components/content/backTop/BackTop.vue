@@ -6,7 +6,21 @@
 
 <script>
 export default {
-    name: "BackTop"
+    name: "BackTop",
+    // props: {
+    //     position: {
+    //         type: Object,
+    //         default() {
+    //             return {}
+    //         }
+    //     }
+    // },
+    data() {
+        return {
+        }
+    },
+    methods: {
+    }
 }
 </script>
 

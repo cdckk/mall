@@ -9,7 +9,7 @@
         <div class="img" v-for="item in detailInfo.detailImage[0].list"
         :key="item"
         >
-            <img :src="item">
+            <img :src="item" @load="imageLoad">
         </div>
         
     </div>
@@ -24,6 +24,12 @@ export default {
             default() {
                 return {}
             }
+        }
+    },
+    methods: {
+        //向父组件发送图片加载事件，防抖动
+        imageLoad() {
+            this.$emit('imageLoad')
         }
     }
 }
