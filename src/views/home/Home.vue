@@ -24,7 +24,7 @@
             <goods-list :goods="showGoods"></goods-list>
         </scroll>
             <!-- <scroll/> -->
-        <back-top @click.native="backClick" v-if="isShow" />
+        <back-top @click.native="backClick" v-if="isShow"/>
     </div>
 </template>
 
@@ -90,7 +90,7 @@ import {debounce} from '../../common/utils'
             this.saveY = this.$refs.scroll.getScrollY();
 
             //取消全局事件的监听
-            this.$bus.$off('itemImageLoad', this.itemImglistener())
+            this.$bus.$off('itemImageLoad', this.itemImglistener)
         },
         created() {
             
@@ -109,7 +109,7 @@ import {debounce} from '../../common/utils'
             this.itemImglistener = () => {
                 refresh()
             }
-            this.$bus.$on('itemImageLoad', this.itemImglistener())
+            this.$bus.$on('itemImageLoad', this.itemImglistener)
         },
         methods: {
             tabClick(index) {
@@ -131,6 +131,7 @@ import {debounce} from '../../common/utils'
             contentScroll(position) {
                 //判断backTop是否显示
                 this.isShow = position.y < -1000;
+                //顶部固定的control
                 this.isTabFixed = -position.y > this.tabOffsetTop;
             },
             loadMore() {

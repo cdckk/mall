@@ -1,15 +1,24 @@
 <template>
     <div id="detail">
-        <detail-nav-bar class="detail-nav"></detail-nav-bar>
-        <scroll class="content" :pull-up-load="true" ref="scroll">
+        <detail-nav-bar class="detail-nav" 
+                        @titleClick="titleClick"
+                        :current-scroll="currentScroll"
+                        ref="nav"></detail-nav-bar>
+        <scroll class="content" 
+                :pull-up-load="true" 
+                ref="scroll" 
+                @scroll="contentScroll"
+                :probe-type="3">
             <detail-swiper :top-images="topImages"></detail-swiper>
             <detail-base-info :goods="goods"></detail-base-info>
             <detail-shop-info :shop="shop"></detail-shop-info>
-            <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"></detail-goods-info>
-            <detail-param-info :param-info="paramInfo"></detail-param-info>
-            <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
-            <goods-list :goods="recommendInfo"></goods-list>
+            <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad" ref="goods"></detail-goods-info>
+            <detail-param-info :param-info="paramInfo" ref="param"></detail-param-info>
+            <detail-comment-info :comment-info="commentInfo" ref="comment"></detail-comment-info>
+            <goods-list :goods="recommendInfo" ref="recommend"></goods-list>
         </scroll>
+        <back-top @click.native="backClick" v-show="isShow"></back-top>
+        <detail-bottom-bar @addCart="addToCart"></detail-bottom-bar>
     </div>
 </template>
 
@@ -21,6 +30,9 @@ import DetailShopInfo from './childComps/DetailShopInfo.vue'
 import DetailGoodsInfo from './childComps/DetailGoodsInfo.vue'
 import DetailParamInfo from './childComps/DetailParamInfo.vue'
 import DetailCommentInfo from './childComps/DetailCommentInfo.vue'
+import DetailBottomBar from './childComps/DetailBottomBar.vue'
+import BackTop from 'components/content/backTop/BackTop.vue'
+
 
 import Scroll from '../../components/common/scroll/Scroll.vue'
 import GoodsList from 'components/content/goods/GoodsList.vue'
@@ -42,6 +54,8 @@ export default {
         DetailCommentInfo,
         GoodsList,
         Scroll,
+        DetailBottomBar,
+        BackTop
     },
     data() {
         return {
@@ -53,7 +67,12 @@ export default {
             paramInfo:{},
             commentInfo: {},
             recommendInfo: [],
-            itemImgListener: null
+            itemImgListener: null,
+            themeTopYs: [],
+            getThemeTopY: null,
+            positionY: 0,
+            currentScroll: 0,
+            isShow: false
         }
     },
     created() {
@@ -102,23 +121,70 @@ export default {
             console.log('推荐信息');
             this.recommendInfo = res.data.list;
         })
+
+        //给getThemeTopY赋值,对this.themeTopYs防抖动
+        this.getThemeTopY = debounce(() => {
+            this.themeTopYs.push(0)
+            this.themeTopYs.push(this.$refs.param.$el.offsetTop)
+            this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+            this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+            console.log('防抖操作');
+        }, 100)
     },
     mounted() {
         const refresh = debounce(this.$refs.scroll.refresh);
         this.itemImgListener = () => {
             refresh()
         };
-        this.$emit.$on('itemImageLoad', this.itemImgListener())
+        this.$bus.$on('itemImageLoad', this.itemImgListener);
+        console.log("挂载");
+        console.log(this.positionY);
     },
     destroyed() {
-        this.$emit.$off('itemImageLoad', this.itemImgListener())
+        this.$bus.$off('itemImageLoad', this.itemImgListener)
     },
     methods: {
         //接收子组件DetailGoodsInfo发来的自定义事件
         imageLoad() {
             const refresh = debounce(this.$refs.scroll.refresh);
-            refresh()
+            refresh();
+            this.getThemeTopY();
         },
+        titleClick(index) {
+            console.log(index);
+            this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 600)
+        },
+        //获取滚动的位置
+        contentScroll(position) {
+            this.positionY = -position.y;
+            if(this.themeTopYs[0]<=this.positionY && this.positionY<this.themeTopYs[1]) {
+                this.currentScroll = 0
+            } else if(this.themeTopYs[1]<=this.positionY && this.positionY<this.themeTopYs[2]) {
+                this.currentScroll = 1
+            } else if(this.themeTopYs[2]<=this.positionY && this.positionY<this.themeTopYs[3]) {
+                this.currentScroll = 2
+            } else if(this.themeTopYs[3]<=this.positionY) {
+                this.currentScroll = 3
+            } 
+            this.$refs.nav.currentIndex = this.currentScroll;
+
+            //判断backTop是否显示
+            this.isShow = position.y < -1000;
+        },
+        //回到顶部
+        backClick() {
+            this.$refs.scroll.scrollTo(0,0)
+        },
+        addToCart() {
+            const product = {};
+            product.image = this.topImages[0];
+            product.title = this.goods.title;
+            product.desc = this.goods.desc;
+            product.price = this.goods.realPrice;
+            product.iid = this.iid;
+
+            this.$store.commit('addCart', product)
+        }
     }
 }
 </script>

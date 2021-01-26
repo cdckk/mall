@@ -55,7 +55,6 @@ export default {
             this.bscroll.finishPullUp()
         },
         refresh() {
-            console.log(88888888);
             this.bscroll && this.bscroll.refresh()
         },
         getScrollY() {

@@ -7,7 +7,8 @@
             <div slot="center" class="title">
                 <div v-for="(item,index) in title"  
                     :key="item" 
-                    class="title-item" :class="{active: index === currentIndex}"
+                    class="title-item" 
+                    :class="{active: index === currentIndex}"
                     @click="titleClick(index)">
                     {{item}}    
                 </div>
@@ -24,15 +25,25 @@ export default {
     components: {
         NavBar
     },
+    props: {
+        currentScroll: {
+            type: Number,
+        }
+    },
     data() {
         return {
             title: ['商品','参数','评论','推荐'],
             currentIndex: 0
         }
     },
+    mounted() {
+        console.log('挂在之后');
+        console.log(this.currentScroll);
+    },
     methods: {
         titleClick(index) {
             this.currentIndex = index;
+            this.$emit('titleClick', index)
         },
         backClick() {
             this.$router.back();
