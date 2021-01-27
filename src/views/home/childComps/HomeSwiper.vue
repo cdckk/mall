@@ -1,7 +1,7 @@
 <template>
     <swiper-item>
         <!-- <a href="banners[0].link"></a> -->
-        <img :src="banners[0].image" @load="imageLoad">
+        <img :src="banners[1].image" @load="imageLoad">
     </swiper-item>
 </template>
 

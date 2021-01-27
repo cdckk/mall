@@ -82,30 +82,21 @@ export default {
         getDetail(this.iid).then(res => {
             //1.获取数据
             const data = res.result;
-            console.log(111111111);
-            console.log(data);
 
             //2.获取顶部的图片数据
             this.topImages = data.itemInfo.topImages;
 
             //3.获取商品信息
             this.goods = new Goods(data.itemInfo, data.columns, data.shopInfo.services);
-            console.log(2222222);
-            console.log(this.goods);
 
             //4.获取店铺信息
             this.shop = new Shop(data.shopInfo)
-            console.log(data.shopInfo);
-            console.log(3333333);
-            console.log(this.shop.goodsCount);
 
             //5.获取商品详细信息
             this.detailInfo = data.detailInfo;
 
             //6.获取商品参数信息
             this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule);
-            console.log(4444444);
-            console.log(this.paramInfo);
 
             //7.取出评论信息
             if(data.rate.cRate !== 0) {
@@ -137,8 +128,6 @@ export default {
             refresh()
         };
         this.$bus.$on('itemImageLoad', this.itemImgListener);
-        console.log("挂载");
-        console.log(this.positionY);
     },
     destroyed() {
         this.$bus.$off('itemImageLoad', this.itemImgListener)
@@ -183,7 +172,9 @@ export default {
             product.price = this.goods.realPrice;
             product.iid = this.iid;
 
-            this.$store.commit('addCart', product)
+            this.$store.dispatch('addCart', product).then((res) => {
+                console.log(res);
+            })
         }
     }
 }

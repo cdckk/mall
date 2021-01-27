@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import mutations from './mutations'
+import actions from './actions'
+import getters from './getters'
+
 //安装插件  
 Vue.use(Vuex)
 
@@ -9,18 +13,9 @@ const store = new Vuex.Store({
     state: {
         cartList: []
     },
-    mutations: {
-        addCart(state, payLoad) {
-            // state.cartList.push(payLoad)
-            let oldProduct = state.cartList.find(item => item.iid === payLoad.iid)
-            if(oldProduct) {
-                oldProduct.count +=1
-            } else {
-                payLoad.count = 1;
-                state.cartList.push(payLoad);
-            }
-        }
-    }
+    mutations,
+    actions,
+    getters
 })
 
 //挂载vue实例上

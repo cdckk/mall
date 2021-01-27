@@ -140,9 +140,6 @@ import {debounce} from '../../common/utils'
 
             swiperLoad() {
                 //拿到tabcontrol的offsetTop
-                console.log(555555555);
-                console.log(this.$refs.tabControl2);
-                console.log(this.$refs.tabControl2.$el.offsetTop);
                 this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
                 
             },
