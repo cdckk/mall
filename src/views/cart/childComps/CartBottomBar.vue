@@ -100,6 +100,7 @@ export default {
     }
     .total-count {
         width: 90px;
-        background-color: red;
+        background-color: orangered;
+        color: #fff;
     }
 </style>

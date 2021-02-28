@@ -147,6 +147,7 @@ import {debounce} from '../../common/utils'
             //网络请求方法
             getHomeMultidata() {
                 getHomeMultidata().then(res => {
+                console.log('首页数据');
                 console.log(res.data);
                 this.banners = res.data.banner.list;
                 this.recommends = res.data.recommend.list;
@@ -160,7 +161,7 @@ import {debounce} from '../../common/utils'
                 
                 this.$refs.scroll.finishPullUp();
             })
-            }
+            },
         }
         }
 </script>
@@ -183,6 +184,7 @@ import {debounce} from '../../common/utils'
     .home-nav {
         background-color: var(--color-tint);
         color: #fff;
+        font-weight: 700;
         /* position: fixed;
         left: 0;
         right: 0;

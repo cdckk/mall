@@ -11,7 +11,8 @@ Vue.use(Vuex)
 //创建store对象
 const store = new Vuex.Store({
     state: {
-        cartList: []
+        cartList: [],
+        userInfo: {}
     },
     mutations,
     actions,

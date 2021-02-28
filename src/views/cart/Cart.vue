@@ -43,6 +43,6 @@ import { mapGetters } from 'vuex'
  .nav-bar {
      background-color: var(--color-tint);
      color: #fff;
-     /* font-weight: 700; */
+     font-weight: 700;
 }
 </style>
