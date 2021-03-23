@@ -1,12 +1,18 @@
 <template>
-    <swiper-item>
-        <!-- <a href="banners[0].link"></a> -->
-        <img :src="banners[1].image" @load="imageLoad">
-    </swiper-item>
+  <div class="home-swiper">
+    <swiper :options="swiperOptions" ref="mySwiper" class="swiper-content">
+      <swiper-slide v-for="(item,index) in banners" :key="index">
+        <img class="swiper-img" :src="item.image" @load="imageLoad">
+      </swiper-slide>
+      <div class="swiper-pagination" slot="pagination"></div>
+    </swiper>
+  </div>
+  
 </template>
 
 <script>
-    import {SwiperItem} from 'components/common/swiper'
+    // import {SwiperItem} from 'components/common/swiper'
+    import { swiper, swiperSlide, directive } from 'vue-awesome-swiper'
 
 
 export default {
@@ -21,11 +27,30 @@ export default {
     },
     data() {
         return {
-            isLoad: false
+            isLoad: false,
+            swiperOptions: {
+              autoplay: 2000,
+              loop: true,
+              // pagination: {
+              //    el: '.swiper-pagination',
+              // }
+              pagination: '.swiper-pagination',
+            }
         }
     },
     components: {
-        SwiperItem
+        // SwiperItem,
+        swiper,
+        swiperSlide
+    },
+    directives: {
+      swiper: directive
+    },
+    computed: {
+       
+    },
+    mounted() {
+      
     },
     methods: {
         imageLoad() {
@@ -37,6 +62,15 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-
+<style scoped>
+  .home-swiper {
+    width: 100%;
+    /* overflow: hidden; */
+  }
+  .swiper-img {
+    width: 100%;
+  }
+  /* .swiper-pagination {
+    color: chartreuse;
+  } */
 </style>
